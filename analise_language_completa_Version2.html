@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Language Pré e Pós enriquecimento</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        body {
+            font-family: 'Ubuntu', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #FFFFFF;
+            color: #242426;
+        }
+        h1, h2, h3 {
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: 700;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .chart-container {
+            position: relative;
+            height: 500px;
+            margin-bottom: 30px;
+        }
+        .volume-overview-container {
+            margin-bottom: 50px;
+            background-color: #F2F2F2;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .tab-container {
+            margin-bottom: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .tab-button {
+            background-color: #F2F2F2;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            font-family: 'Ubuntu', sans-serif;
+            font-weight: 700;
+            border-radius: 4px 4px 0 0;
+        }
+        .tab-button.active {
+            background-color: #4219B5;
+            color: #FFFFFF;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #F2F2F2;
+            border-radius: 0 4px 4px 4px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .language-tabs {
+            margin-top: 30px;
+        }
+        .volume-card {
+            background-color: #F2F2F2;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #242426;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Análise Language Pré e Pós enriquecimento</h1>
+        
+        <!-- Volume Overview Section -->
+        <div class="volume-overview-container">
+            <h2>Visão Geral por Volume</h2>
+            
+            <div class="tab-container">
+                <div class="tab-buttons" id="overview-tabs">
+                    <button class="tab-button active" data-tab="overview-lines">Gráfico de Linhas</button>
+                    <button class="tab-button" data-tab="overview-bars">Gráfico de Barras</button>
+                </div>
+                
+                <div class="tab-content active" id="overview-lines">
+                    <div class="chart-container">
+                        <canvas id="volumeLineChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="overview-bars">
+                    <div class="chart-container">
+                        <canvas id="volumeBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chapter Details Section -->
+        <h2>Detalhes por Capítulo</h2>
+        
+        <div class="tab-container">
+            <div class="tab-buttons" id="language-group-tabs">
+                <button class="tab-button active" data-tab="language-group-1-5">Language 1-5</button>
+                <button class="tab-button" data-tab="language-group-6-9">Language 6-9</button>
+            </div>
+            
+            <!-- Language Group 1-5 -->
+            <div class="tab-content active" id="language-group-1-5">
+                <div class="language-tabs">
+                    <div class="tab-buttons" id="language-tabs-1-5">
+                        <button class="tab-button active" data-tab="language-1">Language 1</button>
+                        <button class="tab-button" data-tab="language-2">Language 2</button>
+                        <button class="tab-button" data-tab="language-3">Language 3</button>
+                        <button class="tab-button" data-tab="language-4">Language 4</button>
+                        <button class="tab-button" data-tab="language-5">Language 5</button>
+                    </div>
+                    
+                    <!-- Language 1 -->
+                    <div class="tab-content active" id="language-1">
+                        <div class="chart-container">
+                            <canvas id="language1Chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Language 2 -->
+                    <div class="tab-content" id="language-2">
+                        <div class="chart-container">
+                            <canvas id="language2Chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Language 3 -->
+                    <div class="tab-content" id="language-3">
+                        <div class="chart-container">
+                            <canvas id="language3Chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Language 4 -->
+                    <div class="tab-content" id="language-4">
+                        <div class="chart-container">
+                            <canvas id="language4Chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Language 5 -->
+                    <div class="tab-content" id="language-5">
+                        <div class="chart-container">
+                            <canvas id="language5Chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Language Group 6-9 -->
+            <div class="tab-content" id="language-group-6-9">
+                <div class="language-tabs">
+                    <div class="tab-buttons" id="language-tabs-6-9">
+                        <button class="tab-button active" data-tab="language-6">Language 6</button>
+                        <button class="tab-button" data-tab="language-7">Language 7</button>
+                        <button class="tab-button" data-tab="language-8">Language 8</button>
+                        <button class="tab-button" data-tab="language-9">Language 9</button>
+                    </div>
+                    
+                    <!-- Language 6 -->
+                    <div class="tab-content active" id="language-6">
+                        <div class="chart-container">
+                            <canvas id="language6Chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Language 7 -->
+                    <div class="tab-content" id="language-7">
+                        <div class="chart-container">
+                            <canvas id="language7Chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Language 8 -->
+                    <div class="tab-content" id="language-8">
+                        <div class="chart-container">
+                            <canvas id="language8Chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Language 9 -->
+                    <div class="tab-content" id="language-9">
+                        <div class="chart-container">
+                            <canvas id="language9Chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Gerado em: <span id="currentDate"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Dados de Volume
+        const volumeData = {
+            volumes: ['Language 1', 'Language 2', 'Language 3', 'Language 4', 'Language 5', 'Language 6', 'Language 7', 'Language 8', 'Language 9'],
+            media2024: [69.66, 70.80, 66.46, 73.62, 75.40, 72.35, 66.77, 51.92, 51.24],
+            media2025: [79.15, 78.86, 77.21, 74.62, 74.88, 67.02, 61.74, 66.50, 66.45],
+            diferenca: [9.49, 8.06, 10.75, 1.00, -0.52, -5.33, -5.03, 14.58, 15.21],
+            percentMudanca: [13.62, 11.38, 16.18, 1.36, -0.69, -7.37, -7.53, 28.08, 29.68]
+        };
+
+        // Dados de Capítulos por Língua
+        const chapterData = {
+            language1: {
+                chapters: ['Chapter 1', 'Chapter 2', 'Chapter 3', 'Chapter 4', 'Chapter 5', 'Chapter 6', 'Chapter 7', 'Chapter 8', 'Chapter 9', 'Chapter 10', 'Chapter 11', 'Chapter 12'],
+                media2024: [83.65, 91.12, 78.79, 78.58, 64.50, 65.77, 63.87, 64.79, 68.06, 66.26, 62.19, null],
+                media2025: [76.26, 90.04, 80.60, 83.00, 80.18, 76.84, 78.37, 81.52, 79.01, 71.89, 75.56, 72.46]
+            },
+            language2: {
+                chapters: ['Chapter 1', 'Chapter 2', 'Chapter 3', 'Chapter 4', 'Chapter 5', 'Chapter 6', 'Chapter 7', 'Chapter 8', 'Chapter 9', 'Chapter 10', 'Chapter 11', 'Chapter 12'],
+                media2024: [85.35, 79.99, 84.49, 78.02, 63.96, 61.95, 68.60, 68.26, 73.82, 65.98, 61.72, null],
+                media2025: [77.24, 79.02, 81.62, 79.81, 79.76, 80.74, 79.45, 74.38, 79.08, 86.45, 78.28, 70.46]
+            },
+            language3: {
+                chapters: ['Chapter 1', 'Chapter 2', 'Chapter 3', 'Chapter 4', 'Chapter 5', 'Chapter 6', 'Chapter 7', 'Chapter 8', 'Chapter 9', 'Chapter 10', 'Chapter 11', 'Chapter 12'],
+                media2024: [79.85, 80.16, 80.28, 75.10, 69.10, 66.33, 68.10, 62.66, 54.28, 60.88, 58.29, null],
+                media2025: [74.03, 78.71, 77.73, 75.77, 78.63, 80.45, 77.16, 78.72, 75.69, 79.35, 75.89, 74.40]
+            },
+            language4: {
+                chapters: ['Chapter 1', 'Chapter 2', 'Chapter 3', 'Chapter 4', 'Chapter 5', 'Chapter 6', 'Chapter 7', 'Chapter 8', 'Chapter 9', 'Chapter 10', 'Chapter 11', 'Chapter 12'],
+                media2024: [85.80, 82.64, 80.06, 81.82, 71.32, 65.75, 65.54, 78.06, 73.85, 70.96, 66.85, null],
+                media2025: [74.46, 81.23, 77.89, 79.42, 77.02, 78.65, 75.76, 78.00, 75.72, 73.94, 44.25, 66.10]
+            },
+            language5: {
+                chapters: ['Chapter 1', 'Chapter 2', 'Chapter 3', 'Chapter 4', 'Chapter 5', 'Chapter 6', 'Chapter 7', 'Chapter 8', 'Chapter 9', 'Chapter 10', 'Chapter 11', 'Chapter 12'],
+                media2024: [81.84, 82.03, 82.87, 81.56, 68.18, 70.69, 68.01, 80.83, 78.21, 67.47, 75.09, null],
+                media2025: [79.23, 83.07, 77.67, 75.39, 80.48, 81.51, 76.70, 73.40, 73.06, 68.78, 39.80, 73.27]
+            },
+            language6: {
+                chapters: ['Chapter 1', 'Chapter 2', 'Chapter 3', 'Chapter 4', 'Chapter 5', 'Chapter 6', 'Chapter 7', 'Chapter 8', 'Chapter 9', 'Chapter 10', 'Chapter 11', 'Chapter 12', 'Chapter 13', 'Chapter 14', 'Chapter 15', 'Chapter 16', 'Chapter 17', 'Chapter 18', 'Chapter 19', 'Chapter 20', 'Chapter 21', 'Chapter 22', 'Chapter 23', 'Chapter 24', 'Chapter 25', 'Chapter 26', 'Chapter 27', 'Chapter 28', 'Chapter 30'],
+                media2024: [75.67, 76.57, 77.35, 70.76, 81.07, 69.76, 80.26, 65.05, 66.06, 61.76, 61.61, 67.92, 65.05, 70.33, 71.44, 66.75, 76.51, 66.76, 72.02, 80.54, 75.18, 79.65, 71.98, 71.71, 78.51, 59.59, 81.82, 80.92, null],
+                media2025: [66.84, 68.23, 63.98, 63.50, 70.11, 63.27, 77.48, 67.47, 63.53, 67.57, 66.86, 67.81, 60.99, 67.80, 66.65, 64.45, 73.43, 64.66, 61.27, 69.26, 64.43, 30.33, null, null, 61.14, 79.82, 75.71, 67.22, 97.00]
+            },
+            language7: {
+                chapters: ['Chapter 1', 'Chapter 2', 'Chapter 3', 'Chapter 4', 'Chapter 5', 'Chapter 6', 'Chapter 7', 'Chapter 8', 'Chapter 9', 'Chapter 10', 'Chapter 11', 'Chapter 12', 'Chapter 13', 'Chapter 14', 'Chapter 15', 'Chapter 16', 'Chapter 17', 'Chapter 18', 'Chapter 19', 'Chapter 20', 'Chapter 21', 'Chapter 22', 'Chapter 23', 'Chapter 24', 'Chapter 25', 'Chapter 26', 'Chapter 27', 'Chapter 28'],
+                media2024: [63.58, 73.43, 68.84, 73.54, 69.29, 70.47, 63.02, 52.41, 62.88, 69.81, 64.59, 71.16, 76.88, 68.15, 64.99, 70.23, 69.12, 69.56, 51.50, 67.92, 55.42, 71.08, 63.57, 68.90, 64.40, 74.75, 72.00, 79.78],
+                media2025: [50.88, 58.84, 74.31, 74.15, 67.99, 68.90, 65.53, 58.83, 71.01, 71.11, 59.71, 65.99, 59.32, 50.20, 59.18, 63.31, 62.18, 53.67, 55.03, 64.28, 43.45, 62.05, null, null, null, null, null, 50.00]
+            },
+            language8: {
+                chapters: ['Chapter 1', 'Chapter 2', 'Chapter 3', 'Chapter 4', 'Chapter 5', 'Chapter 6', 'Chapter 7', 'Chapter 8', 'Chapter 9', 'Chapter 10', 'Chapter 11', 'Chapter 12', 'Chapter 13', 'Chapter 14', 'Chapter 15', 'Chapter 16', 'Chapter 17', 'Chapter 18', 'Chapter 19', 'Chapter 20', 'Chapter 21', 'Chapter 22', 'Chapter 23', 'Chapter 24', 'Chapter 25', 'Chapter 26', 'Chapter 27', 'Chapter 28'],
+                media2024: [65.83, 77.68, 68.56, 70.06, 71.15, 74.99, 72.30, 61.15, 62.91, 63.37, 62.98, 68.92, 63.62, 74.84, 67.64, 76.76, 53.56, 62.14, 61.34, 62.85, 26.86, 33.07, 25.12, 38.00, 21.36, 25.56, 19.00, 28.12],
+                media2025: [71.56, 72.70, 78.86, 74.28, 66.09, 77.85, 74.83, 81.58, 71.18, 71.91, 71.60, 77.74, 68.75, 68.77, 68.82, 79.18, 73.24, 66.68, 66.99, 61.74, 54.42, 54.62, 35.38, 44.86, 24.50, null, 46.50, 53.62]
+            },
+            language9: {
+                chapters: ['Chapter 1', 'Chapter 2', 'Chapter 3', 'Chapter 4', 'Chapter 5', 'Chapter 6', 'Chapter 7', 'Chapter 8', 'Chapter 9', 'Chapter 10', 'Chapter 11', 'Chapter 12', 'Chapter 13', 'Chapter 14', 'Chapter 15', 'Chapter 16', 'Chapter 17', 'Chapter 18', 'Chapter 19', 'Chapter 20', 'Chapter 21', 'Chapter 22', 'Chapter 27', 'Chapter 28'],
+                media2024: [69.23, 74.26, 67.96, 69.18, 71.74, 65.92, 63.46, 50.13, 54.01, 52.11, 51.64, 60.72, 60.01, 53.49, 40.40, 48.27, 38.92, 38.86, 44.44, 41.71, 37.18, 45.33, 50.00, 34.92],
+                media2025: [65.13, 74.55, 69.61, 65.98, 64.42, 74.90, 68.96, 70.44, 71.55, 72.73, 71.77, 65.41, 64.33, 69.67, 69.31, 72.44, 69.19, 59.11, 56.85, 55.24, 57.62, 20.00, null, 3.00]
+            }
+        };
+
+        // Funções de Inicialização dos Gráficos
+        function initCharts() {
+            // Cores padrão
+            const colors = {
+                color2024: '#4CD1F6', // Light Blue
+                color2025: '#4219B5'  // Dark Blue
+            };
+            
+            // Inicializa os gráficos de visão geral
+            initVolumeLineChart();
+            initVolumeBarChart();
+            
+            // Inicializa os gráficos de detalhes por língua
+            initLanguageChart('language1Chart', chapterData.language1, colors);
+            initLanguageChart('language2Chart', chapterData.language2, colors);
+            initLanguageChart('language3Chart', chapterData.language3, colors);
+            initLanguageChart('language4Chart', chapterData.language4, colors);
+            initLanguageChart('language5Chart', chapterData.language5, colors);
+            initLanguageChart('language6Chart', chapterData.language6, colors);
+            initLanguageChart('language7Chart', chapterData.language7, colors);
+            initLanguageChart('language8Chart', chapterData.language8, colors);
+            initLanguageChart('language9Chart', chapterData.language9, colors);
+            
+            // Função para inicializar o gráfico de linha de visão geral
+            function initVolumeLineChart() {
+                const ctx = document.getElementById('volumeLineChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: volumeData.volumes,
+                        datasets: [
+                            {
+                                label: 'Média 2024',
+                                data: volumeData.media2024,
+                                borderColor: colors.color2024,
+                                backgroundColor: colors.color2024,
+                                pointBackgroundColor: colors.color2024,
+                                borderWidth: 3,
+                                tension: 0.1,
+                                pointRadius: 6
+                            },
+                            {
+                                label: 'Média 2025',
+                                data: volumeData.media2025,
+                                borderColor: colors.color2025,
+                                backgroundColor: colors.color2025,
+                                pointBackgroundColor: colors.color2025,
+                                borderWidth: 3,
+                                tension: 0.1,
+                                pointRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Comparação de Médias por Volume',
+                                font: {
+                                    family: 'Ubuntu',
+                                    size: 18,
+                                    weight: 'bold'
+                                }
+                            },
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        family: 'Ubuntu',
+                                        size: 14
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y.toFixed(2);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: Math.min(...volumeData.media2024, ...volumeData.media2025) * 0.9,
+                                max: Math.max(...volumeData.media2024, ...volumeData.media2025) * 1.1,
+                                ticks: {
+                                    font: {
+                                        family: 'Ubuntu'
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        family: 'Ubuntu'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Função para inicializar o gráfico de barras de visão geral
+            function initVolumeBarChart() {
+                const ctx = document.getElementById('volumeBarChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: volumeData.volumes,
+                        datasets: [
+                            {
+                                label: 'Média 2024',
+                                data: volumeData.media2024,
+                                backgroundColor: colors.color2024,
+                                borderColor: colors.color2024,
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Média 2025',
+                                data: volumeData.media2025,
+                                backgroundColor: colors.color2025,
+                                borderColor: colors.color2025,
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Comparação de Médias por Volume',
+                                font: {
+                                    family: 'Ubuntu',
+                                    size: 18,
+                                    weight: 'bold'
+                                }
+                            },
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        family: 'Ubuntu',
+                                        size: 14
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y.toFixed(2);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: Math.min(...volumeData.media2024, ...volumeData.media2025) * 0.9,
+                                ticks: {
+                                    font: {
+                                        family: 'Ubuntu'
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        family: 'Ubuntu'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Função para inicializar os gráficos de detalhes por língua
+            function initLanguageChart(chartId, data, colors) {
+                const ctx = document.getElementById(chartId).getContext('2d');
+                
+                // Filtrar para remover valores nulos
+                const filteredChapters = [];
+                const filteredMedia2024 = [];
+                const filteredMedia2025 = [];
+                
+                for (let i = 0; i < data.chapters.length; i++) {
+                    // Incluir apenas se pelo menos um dos valores não for nulo
+                    if (data.media2024[i] !== null || data.media2025[i] !== null) {
+                        filteredChapters.push(data.chapters[i]);
+                        filteredMedia2024.push(data.media2024[i]);
+                        filteredMedia2025.push(data.media2025[i]);
+                    }
+                }
+                
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: filteredChapters,
+                        datasets: [
+                            {
+                                label: 'Média 2024',
+                                data: filteredMedia2024,
+                                borderColor: colors.color2024,
+                                backgroundColor: colors.color2024,
+                                pointBackgroundColor: colors.color2024,
+                                borderWidth: 3,
+                                tension: 0.1,
+                                pointRadius: 6
+                            },
+                            {
+                                label: 'Média 2025',
+                                data: filteredMedia2025,
+                                borderColor: colors.color2025,
+                                backgroundColor: colors.color2025,
+                                pointBackgroundColor: colors.color2025,
+                                borderWidth: 3,
+                                tension: 0.1,
+                                pointRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: `Comparação de Médias por Capítulo - ${chartId.replace('Chart', '')}`,
+                                font: {
+                                    family: 'Ubuntu',
+                                    size: 18,
+                                    weight: 'bold'
+                                }
+                            },
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        family: 'Ubuntu',
+                                        size: 14
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y.toFixed(2);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: Math.min(...filteredMedia2024.filter(v => v !== null), ...filteredMedia2025.filter(v => v !== null)) * 0.9,
+                                ticks: {
+                                    font: {
+                                        family: 'Ubuntu'
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        family: 'Ubuntu'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Gerenciamento de Abas
+        function setupTabs() {
+            // Função genérica para configurar tabs
+            function setupTabGroup(tabContainerId, onTabClick) {
+                const tabButtons = document.querySelectorAll(`#${tabContainerId} .tab-button`);
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const tabId = this.dataset.tab;
+                        
+                        // Remover classe active de todos os botões no mesmo container
+                        document.querySelectorAll(`#${tabContainerId} .tab-button`).forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+                        
+                        // Adicionar classe active ao botão clicado
+                        this.classList.add('active');
+                        
+                        if (onTabClick) {
+                            onTabClick(tabId);
+                        }
+                    });
+                });
+            }
+            
+            // Configurar abas de visão geral
+            setupTabGroup('overview-tabs', function(tabId) {
+                document.querySelectorAll('#overview-lines, #overview-bars').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            });
+            
+            // Configurar abas de grupos de línguas
+            setupTabGroup('language-group-tabs', function(tabId) {
+                document.querySelectorAll('#language-group-1-5, #language-group-6-9').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            });
+            
+            // Configurar abas de línguas 1-5
+            setupTabGroup('language-tabs-1-5', function(tabId) {
+                document.querySelectorAll('#language-1, #language-2, #language-3, #language-4, #language-5').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            });
+            
+            // Configurar abas de línguas 6-9
+            setupTabGroup('language-tabs-6-9', function(tabId) {
+                document.querySelectorAll('#language-6, #language-7, #language-8, #language-9').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            });
+        }
+
+        // Data atual
+        function setCurrentDate() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('pt-BR', options);
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            setupTabs();
+            setCurrentDate();
+        });
+    </script>
+</body>
+</html>
