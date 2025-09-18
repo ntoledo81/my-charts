@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Charts - HTML Chart Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>My Charts</h1>
+            <p>Upload HTML files to display charts and data analysis</p>
+        </header>
+        
+        <main>
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <div class="upload-icon">📊</div>
+                        <h3>Drop HTML files here or click to browse</h3>
+                        <p>Supported formats: .html, .htm</p>
+                        <input type="file" id="fileInput" accept=".html,.htm" multiple hidden>
+                        <button class="browse-btn" onclick="document.getElementById('fileInput').click()">
+                            Browse Files
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="file-list" id="fileList">
+                <h3>Uploaded Files</h3>
+                <div id="fileItems"></div>
+            </div>
+            
+            <div class="viewer-section" id="viewerSection" style="display: none;">
+                <div class="viewer-header">
+                    <h3 id="currentFileName">Chart Viewer</h3>
+                    <button class="close-btn" onclick="closeViewer()">×</button>
+                </div>
+                <iframe id="chartViewer" sandbox="allow-scripts allow-same-origin"></iframe>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
